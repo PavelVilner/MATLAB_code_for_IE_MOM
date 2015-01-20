@@ -552,7 +552,7 @@ classdef Function3 < handle
                     
                     if other ~= 0
 
-                        result = Function3(eval(['@(c1,c2,c3)',f_string(12:end),' + ', num2str(other)]));
+                        result = Function3(eval(['@(c1,c2,c3)',f_string(12:end),' + ', num2str(other,25)]));
                     
                     end
                 
@@ -635,7 +635,7 @@ classdef Function3 < handle
                     
                     if other ~= 0
 
-                        result = Function3(eval(['@(c1,c2,c3)',f_string(12:end),' - (', num2str(other),')']));
+                        result = Function3(eval(['@(c1,c2,c3)',f_string(12:end),' - (', num2str(other,25),')']));
                     
                     end
                 
@@ -753,7 +753,7 @@ classdef Function3 < handle
 
                     else
 
-                        result = Function3(eval(['@(c1,c2,c3)(',f_string(12:end),') * (', num2str(other),')']));
+                        result = Function3(eval(['@(c1,c2,c3)(',f_string(12:end),') * (', num2str(other,25),')']));
 
                     end
                
@@ -835,7 +835,7 @@ classdef Function3 < handle
 
                     clear('aux','self','param_list','f_data');
 
-                    result = Function3(eval(['@(c1,c2,c3)(',f_string(12:end),') / (', num2str(other),')']));
+                    result = Function3(eval(['@(c1,c2,c3)(',f_string(12:end),') / (', num2str(other,25),')']));
                  
                 else
                     
@@ -915,7 +915,7 @@ classdef Function3 < handle
 
                     clear('aux','self','param_list','f_data');
 
-                    result = Function3(eval(['@(c1,c2,c3)(',f_string(12:end),') ^ (', num2str(other),')']));
+                    result = Function3(eval(['@(c1,c2,c3)(',f_string(12:end),') ^ (', num2str(other,25),')']));
                 
                 else
                     
@@ -949,13 +949,13 @@ classdef Function3 < handle
                     
                 end
                 
-                aux1 = strrep(f_string(12:end),'c1', ['(c1 + ', num2str(dc1), ')']);
+                aux1 = strrep(f_string(12:end),'c1', ['(c1 + ', num2str(dc1,25), ')']);
                 
-                aux2 = strrep(f_string(12:end),'c1', ['(c1 - ', num2str(dc1), ')']);
+                aux2 = strrep(f_string(12:end),'c1', ['(c1 - ', num2str(dc1,25), ')']);
                 
                 clear('aux','self','f_data','f_string');
                                                 
-                result = Function3(eval(['@(c1,c2,c3)(', aux1, ' - (', aux2,'))/(2*', num2str(dc1) ,')']));
+                result = Function3(eval(['@(c1,c2,c3)(', aux1, ' - (', aux2,'))/(2*', num2str(dc1,25) ,')']));
                 
                 clear(param_list{:}, 'param_list');
             
@@ -989,13 +989,13 @@ classdef Function3 < handle
                     
                 end
                 
-                aux1 = strrep(f_string(12:end),'c2', ['(c2 + ', num2str(dc2),')']);
+                aux1 = strrep(f_string(12:end),'c2', ['(c2 + ', num2str(dc2,25),')']);
                 
-                aux2 = strrep(f_string(12:end),'c2', ['(c2 - ', num2str(dc2),')']);
+                aux2 = strrep(f_string(12:end),'c2', ['(c2 - ', num2str(dc2,25),')']);
                 
                 clear('aux','self','f_data','f_string');
                                                 
-                result = Function3(eval(['@(c1,c2,c3)(', aux1, ' - (', aux2,'))/(2*', num2str(dc2), ')']));
+                result = Function3(eval(['@(c1,c2,c3)(', aux1, ' - (', aux2,'))/(2*', num2str(dc2,25), ')']));
                 
                 clear(param_list{:}, 'param_list');
             
@@ -1029,13 +1029,13 @@ classdef Function3 < handle
                     
                 end
                 
-                aux1 = strrep(f_string(12:end),'c3', ['(c3 + ', num2str(dc3),')']);
+                aux1 = strrep(f_string(12:end),'c3', ['(c3 + ', num2str(dc3,25),')']);
                 
-                aux2 = strrep(f_string(12:end),'c3', ['(c3 - ', num2str(dc3),')']);
+                aux2 = strrep(f_string(12:end),'c3', ['(c3 - ', num2str(dc3,25),')']);
                 
                 clear('aux','self','f_data','f_string');
                                                 
-                result = Function3(eval(['@(c1,c2,c3)(', aux1, ' - (', aux2,'))/(2*', num2str(dc3),')']));
+                result = Function3(eval(['@(c1,c2,c3)(', aux1, ' - (', aux2,'))/(2*', num2str(dc3,25),')']));
                 
                 clear(param_list{:}, 'param_list');
             

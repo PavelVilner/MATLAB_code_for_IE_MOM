@@ -22,9 +22,17 @@ if is_G(Green) && is_Vector_field(V_f) && (strcmp(resolve, 'yes') || strcmp(reso
             
             dc1 = 1;
             
+            c1_N = 1;
+            
+            c1_arr = c1_min;
+            
         else
         
-            dc1 = varargin{7};
+            c1_N = varargin{7};
+            
+            c1_arr = linspace(c1_min, c1_max, c1_N);
+            
+            dc1 = c1_arr(2) - c1_arr(1);
             
         end
         
@@ -32,9 +40,17 @@ if is_G(Green) && is_Vector_field(V_f) && (strcmp(resolve, 'yes') || strcmp(reso
             
             dc2 = 1;
             
+            c2_N = 1;
+            
+            c2_arr = c2_min;
+            
         else
         
-            dc2 = varargin{8};
+            c2_N = varargin{8};
+            
+            c2_arr = linspace(c2_min, c2_max, c2_N);
+            
+            dc2 = c2_arr(2) - c2_arr(1);
         
         end
         
@@ -42,9 +58,17 @@ if is_G(Green) && is_Vector_field(V_f) && (strcmp(resolve, 'yes') || strcmp(reso
             
             dc3 = 1;
             
+            c3_N = 1;
+            
+            c3_arr = c3_min;
+            
         else
         
-            dc3 = varargin{9};
+            c3_N = varargin{9};
+            
+            c3_arr = linspace(c3_min, c3_max, c3_N);
+            
+            dc3 = c3_arr(2) - c3_arr(1);
         
         end
         
@@ -60,13 +84,6 @@ if is_G(Green) && is_Vector_field(V_f) && (strcmp(resolve, 'yes') || strcmp(reso
              error('Error in integration limit inputs to Green_integral()!');
     
         end
-        
-        
-        c1_arr = c1_min:dc1:c1_max;
-        
-        c2_arr = c2_min:dc2:c2_max;
-        
-        c3_arr = c3_min:dc3:c3_max;
         
         func1_string = '@(c1,c2,c3)';
         
@@ -100,15 +117,15 @@ if is_G(Green) && is_Vector_field(V_f) && (strcmp(resolve, 'yes') || strcmp(reso
                             
                             if dc1 ~= 1
                             
-                                dx_local = cos(c2_arr(m))*dc1 - c1_arr(n)*sin(c2_arr(m))*dc2;
+                                dx_local = abs(cos(c2_arr(m))*dc1 - c1_arr(n)*sin(c2_arr(m))*dc2);
 
-                                dy_local = sin(c2_arr(m))*dc1 + c1_arr(n)*cos(c2_arr(m))*dc2;
+                                dy_local = abs(sin(c2_arr(m))*dc1 + c1_arr(n)*cos(c2_arr(m))*dc2);
                             
                             else
                                 
-                                dx_local = - c1_arr(n)*sin(c2_arr(m))*dc2;
+                                dx_local = abs(- c1_arr(n)*sin(c2_arr(m))*dc2);
                             
-                                dy_local = c1_arr(n)*cos(c2_arr(m))*dc2;
+                                dy_local = abs(c1_arr(n)*cos(c2_arr(m))*dc2);
                                 
                             end
                             
@@ -117,26 +134,30 @@ if is_G(Green) && is_Vector_field(V_f) && (strcmp(resolve, 'yes') || strcmp(reso
                         elseif strcmp(type, 'pol')
                             
                         end
+                                                                                                
+                        c_ds = [dx_local, dy_local, dz_local];
+                        
+                        d_max = max(c_ds([c1_N, c2_N, c3_N] ~= 1)); % having non-square dv is illogical
                     
                         green_string = ['resolve_singularity(c1,c2,c3,',...
-                                         '(' num2str(Current_coordinate.value(1)), '),',...
-                                         '(' num2str(Current_coordinate.value(2)), '),',...
-                                         '(' num2str(Current_coordinate.value(3)), '),',...
-                                         '(' num2str(dx_local), '),',...
-                                         '(' num2str(dy_local), '),',...
-                                         '(' num2str(dz_local), '),',...
-                                         '(' num2str(Green.mu), '),',...
-                                         '(' num2str(Green.k), ')',...
+                                         '(' num2str(Current_coordinate.value(1),25), '),',...
+                                         '(' num2str(Current_coordinate.value(2),25), '),',...
+                                         '(' num2str(Current_coordinate.value(3),25), '),',...
+                                         '(' num2str(d_max,25), '),',...
+                                         '(' num2str(d_max,25), '),',...
+                                         '(' num2str(d_max,25), '),',...
+                                         '(' num2str(Green.mu,25), '),',...
+                                         '(' num2str(Green.k,25), ')',...
                                          ')'];
                                             
                     elseif strcmp(resolve, 'no')
                         
-                        green_string = ['(',num2str(Green.mu),')/4/pi*exp(-1i*(',num2str(Green.k),')*sqrt((c1 - (',num2str(Current_coordinate.value(1)),...
-                                        '))^2+(c2 - (',num2str(Current_coordinate.value(2)),...
-                                        '))^2+(c3 - (',num2str(Current_coordinate.value(3)),'))^2))'...
-                                        '/sqrt((c1 - (',num2str(Current_coordinate.value(1)),...
-                                        '))^2+(c2 - (',num2str(Current_coordinate.value(2)),...
-                                        '))^2+(c3 - (',num2str(Current_coordinate.value(3)),'))^2)'];
+                        green_string = ['(',num2str(Green.mu,25),')/4/pi*exp(-1i*(',num2str(Green.k,25),')*sqrt((c1 - (',num2str(Current_coordinate.value(1),25),...
+                                        '))^2+(c2 - (',num2str(Current_coordinate.value(2),25),...
+                                        '))^2+(c3 - (',num2str(Current_coordinate.value(3),25),'))^2))'...
+                                        '/sqrt((c1 - (',num2str(Current_coordinate.value(1),25),...
+                                        '))^2+(c2 - (',num2str(Current_coordinate.value(2),25),...
+                                        '))^2+(c3 - (',num2str(Current_coordinate.value(3),25),'))^2)'];
                         
                     end
                     
@@ -146,11 +167,11 @@ if is_G(Green) && is_Vector_field(V_f) && (strcmp(resolve, 'yes') || strcmp(reso
                         
                     elseif strcmp(type, 'cyl')
                         
-                        Jacobian = ['(' num2str(c1_arr(n)) ')*'];
+                        Jacobian = ['(' num2str(c1_arr(n),25) ')*'];
                         
                     elseif strcmp(type, 'pol')
                         
-                        Jacobian = ['((' num2str(c1_arr(n)) ')^2)*sin(' num2str(c3_arr(k)) ')*'];
+                        Jacobian = ['((' num2str(c1_arr(n),25) ')^2)*sin(' num2str(c3_arr(k),25) ')*'];
                         
                     end
                     
@@ -158,20 +179,20 @@ if is_G(Green) && is_Vector_field(V_f) && (strcmp(resolve, 'yes') || strcmp(reso
                                             
                     if current_V.value(1) ~= 0
 
-                        func1_string = [func1_string,' + ' Jacobian '(',num2str(current_V.value(1)),')*' green_string];
+                        func1_string = [func1_string,' + ' Jacobian '(',num2str(current_V.value(1),25),')*' green_string];
 
 
                     end
 
                     if current_V.value(2) ~= 0
 
-                        func2_string = [func2_string,' + ' Jacobian '(',num2str(current_V.value(2)),')*' green_string];
+                        func2_string = [func2_string,' + ' Jacobian '(',num2str(current_V.value(2),25),')*' green_string];
 
                     end
 
                     if current_V.value(3) ~= 0
 
-                        func3_string = [func3_string,' + ' Jacobian '(',num2str(current_V.value(3)),')*' green_string];
+                        func3_string = [func3_string,' + ' Jacobian '(',num2str(current_V.value(3),25),')*' green_string];
 
                     end
                     
